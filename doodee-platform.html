@@ -1,0 +1,1399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DOODEE — The World's Most Powerful AI Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #050508;
+    --dark: #0a0a0f;
+    --card: #0f0f16;
+    --border: #1a1a2e;
+    --cyan: #00f5ff;
+    --magenta: #ff00aa;
+    --yellow: #f5ff00;
+    --green: #00ff88;
+    --white: #f0f0f0;
+    --muted: #666680;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* NOISE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.4;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 48px;
+    background: rgba(5,5,8,0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'Space Mono', monospace;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 6px;
+    color: var(--cyan);
+    text-decoration: none;
+  }
+
+  .nav-badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    padding: 6px 14px;
+    border-radius: 2px;
+  }
+
+  .nav-cta {
+    background: var(--cyan);
+    color: var(--black);
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    padding: 10px 22px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .nav-cta:hover { background: var(--magenta); color: #fff; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 120px 48px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 60% at 70% 50%, rgba(0,245,255,0.06) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 20% 80%, rgba(255,0,170,0.07) 0%, transparent 60%);
+  }
+
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,245,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,245,255,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 720px;
+  }
+
+  .hero-eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--cyan);
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 1px;
+    background: var(--cyan);
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(72px, 10vw, 140px);
+    line-height: 0.92;
+    letter-spacing: 2px;
+    margin-bottom: 32px;
+  }
+
+  .hero-title .line1 { color: var(--white); display: block; }
+  .hero-title .line2 { color: var(--cyan); display: block; animation: flicker 4s infinite; }
+  .hero-title .line3 { color: var(--magenta); display: block; }
+
+  @keyframes flicker {
+    0%, 95%, 100% { opacity: 1; }
+    96% { opacity: 0.3; }
+    97% { opacity: 1; }
+    98% { opacity: 0.5; }
+    99% { opacity: 1; }
+  }
+
+  .hero-sub {
+    font-size: 17px;
+    line-height: 1.7;
+    color: #aaaacc;
+    max-width: 520px;
+    margin-bottom: 40px;
+  }
+  .hero-sub strong { color: var(--white); }
+
+  .hero-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 44px;
+  }
+
+  .tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .tag:hover { border-color: var(--cyan); color: var(--cyan); }
+  .tag::before {
+    content: '●';
+    font-size: 8px;
+    color: var(--cyan);
+  }
+  .tag.active-tag {
+    border-color: var(--cyan);
+    color: var(--cyan);
+    background: rgba(0,245,255,0.08);
+  }
+
+  .hero-btns {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    background: var(--magenta);
+    color: #fff;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    padding: 16px 36px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-primary::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.15));
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .btn-primary:hover { background: #ff33bb; transform: translateY(-2px); box-shadow: 0 8px 30px rgba(255,0,170,0.4); }
+  .btn-primary:hover::after { opacity: 1; }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--cyan);
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 2px;
+    padding: 16px 36px;
+    border: 1px solid var(--cyan);
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.25s;
+  }
+  .btn-secondary:hover { background: rgba(0,245,255,0.08); transform: translateY(-2px); }
+
+  /* STATS */
+  .stats {
+    padding: 0 48px 80px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .stat {
+    background: var(--black);
+    padding: 48px 40px;
+    text-align: center;
+  }
+
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 72px;
+    line-height: 1;
+    color: var(--cyan);
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .stat-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  /* SECTION COMMON */
+  section { padding: 100px 48px; }
+
+  .section-eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--cyan);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-eyebrow::before {
+    content: '';
+    width: 32px;
+    height: 1px;
+    background: var(--cyan);
+    display: block;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 6vw, 80px);
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+
+  .section-sub {
+    font-size: 16px;
+    color: #888899;
+    max-width: 560px;
+    line-height: 1.7;
+    margin-bottom: 60px;
+  }
+
+  /* AGENTS GRID */
+  .agents-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+
+  .agent-card {
+    background: var(--card);
+    padding: 40px 36px;
+    transition: background 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .agent-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--cyan), var(--magenta));
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .agent-card:hover { background: #12121e; }
+  .agent-card:hover::before { opacity: 1; }
+  .agent-card.agent-active {
+    background: #14141f;
+    outline: 1px solid var(--cyan);
+  }
+  .agent-card.agent-active::before { opacity: 1; }
+
+  .agent-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .agent-num .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(0,255,136,0.4); }
+    50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(0,255,136,0); }
+  }
+
+  .agent-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 40px;
+    letter-spacing: 2px;
+    color: var(--white);
+    margin-bottom: 12px;
+  }
+
+  .agent-desc {
+    font-size: 14px;
+    line-height: 1.65;
+    color: #888899;
+    margin-bottom: 24px;
+  }
+
+  .agent-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .agent-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 4px 10px;
+    border: 1px solid var(--border);
+    color: var(--muted);
+  }
+
+  /* VIDEO STUDIO */
+  .studio-section {
+    background: var(--dark);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .studio-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .studio-preview {
+    background: #0a0a14;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .studio-topbar {
+    background: #080810;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .studio-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+  .studio-screen {
+    background: linear-gradient(135deg, #0d0d1a 0%, #1a0d1a 50%, #0d1a1a 100%);
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .studio-screen::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, rgba(0,245,255,0.08), transparent 70%);
+  }
+
+  .studio-artist {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 6px;
+    color: var(--white);
+    position: relative;
+    z-index: 1;
+  }
+
+  .studio-sub-text {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--cyan);
+    margin-top: 6px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .studio-controls {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .ctrl-btns {
+    display: flex;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .ctrl-play {
+    background: var(--magenta);
+    color: #fff;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+  }
+
+  .ctrl-time {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+  }
+
+  .studio-progress {
+    height: 3px;
+    background: var(--border);
+    margin: 0 16px;
+    position: relative;
+  }
+  .studio-progress-fill {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 40%;
+    background: linear-gradient(90deg, var(--cyan), var(--magenta));
+  }
+
+  .studio-timeline {
+    padding: 12px 16px;
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+  }
+
+  .tl-block {
+    font-family: 'Space Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 1px;
+    padding: 6px 10px;
+    white-space: nowrap;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+  .tl-photo { background: rgba(0,245,255,0.15); color: var(--cyan); }
+  .tl-scene { background: rgba(255,0,170,0.15); color: var(--magenta); }
+  .tl-text { background: rgba(245,255,0,0.15); color: var(--yellow); }
+  .tl-fx { background: rgba(0,255,136,0.15); color: var(--green); }
+  .tl-track { background: rgba(255,255,255,0.08); color: var(--muted); flex-grow: 1; }
+  .tl-outro { background: rgba(0,245,255,0.1); color: var(--cyan); }
+
+  /* STEPS */
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-top: 60px;
+  }
+
+  .step {
+    background: var(--card);
+    padding: 40px 28px;
+  }
+
+  .step-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 80px;
+    line-height: 1;
+    color: rgba(0,245,255,0.12);
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .step-icon { font-size: 28px; margin-bottom: 16px; display: block; }
+
+  .step-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: var(--white);
+    margin-bottom: 12px;
+  }
+
+  .step-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.65;
+  }
+
+  /* MODULES */
+  .modules-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+
+  .module-card {
+    background: var(--card);
+    padding: 48px 40px;
+    display: flex;
+    gap: 28px;
+    transition: background 0.3s;
+  }
+  .module-card:hover { background: #12121e; }
+
+  .module-num-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--border);
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    flex-shrink: 0;
+    align-self: flex-start;
+    margin-top: 4px;
+  }
+
+  .module-body { flex: 1; }
+
+  .module-eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--cyan);
+    margin-bottom: 12px;
+  }
+
+  .module-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    letter-spacing: 2px;
+    margin-bottom: 14px;
+  }
+
+  .module-desc {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.65;
+    margin-bottom: 20px;
+  }
+
+  .module-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .module-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 4px 10px;
+    border: 1px solid var(--border);
+    color: var(--muted);
+  }
+
+  /* PRICING */
+  .pricing-section {
+    background: var(--dark);
+    border-top: 1px solid var(--border);
+  }
+
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+
+  .price-card {
+    background: var(--card);
+    padding: 48px 40px;
+    position: relative;
+  }
+
+  .price-card.popular {
+    background: #0e0e1a;
+  }
+
+  .popular-badge {
+    position: absolute;
+    top: -1px; right: 32px;
+    background: var(--magenta);
+    color: #fff;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    padding: 5px 14px;
+  }
+
+  .price-tier {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+
+  .price-amount {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 72px;
+    line-height: 1;
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+
+  .price-period {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 36px;
+  }
+
+  .price-features {
+    list-style: none;
+    margin-bottom: 40px;
+  }
+
+  .price-features li {
+    font-size: 14px;
+    color: #aaaacc;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .price-features li::before {
+    content: '◆';
+    font-size: 8px;
+    color: var(--cyan);
+    flex-shrink: 0;
+  }
+
+  .price-btn {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 14px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    font-weight: 700;
+    border: 1px solid var(--cyan);
+    color: var(--cyan);
+    background: transparent;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.25s;
+  }
+  .price-btn:hover { background: var(--cyan); color: var(--black); }
+  .price-btn.primary-btn { background: var(--magenta); border-color: var(--magenta); color: #fff; }
+  .price-btn.primary-btn:hover { background: #ff33bb; }
+
+  /* EMAIL CTA */
+  .email-section {
+    text-align: center;
+    padding: 100px 48px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .email-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(255,0,170,0.06), transparent 70%);
+  }
+
+  .email-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 7vw, 96px);
+    line-height: 1;
+    margin-bottom: 20px;
+    position: relative;
+  }
+
+  .email-sub {
+    font-size: 16px;
+    color: var(--muted);
+    max-width: 480px;
+    margin: 0 auto 40px;
+    line-height: 1.7;
+    position: relative;
+  }
+
+  .email-box {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 40px 48px;
+    position: relative;
+  }
+
+  .email-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--muted);
+  }
+
+  .email-address {
+    font-family: 'Space Mono', monospace;
+    font-size: 18px;
+    color: var(--cyan);
+    text-decoration: none;
+    font-weight: 700;
+  }
+  .email-address:hover { color: var(--magenta); }
+
+  .email-subject {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--dark);
+    border-top: 1px solid var(--border);
+    padding: 64px 48px 32px;
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 48px;
+    margin-bottom: 48px;
+  }
+
+  .footer-logo {
+    font-family: 'Space Mono', monospace;
+    font-size: 20px;
+    letter-spacing: 6px;
+    color: var(--cyan);
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .footer-tagline {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .footer-col-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--cyan);
+    margin-bottom: 20px;
+  }
+
+  .footer-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .footer-links a {
+    font-size: 13px;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--white); }
+
+  .footer-bottom {
+    border-top: 1px solid var(--border);
+    padding-top: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-copy {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--muted);
+  }
+
+  .footer-mit {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    padding: 5px 12px;
+  }
+
+  .nav-link {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-link:hover { color: var(--cyan); }
+
+  @media (max-width: 700px) {
+    .nav-link { display: none; }
+  }
+    nav { padding: 16px 24px; }
+    .hero, section { padding-left: 24px; padding-right: 24px; }
+    .stats { grid-template-columns: repeat(2, 1fr); padding: 0; }
+    .agents-grid { grid-template-columns: 1fr; }
+    .studio-inner { grid-template-columns: 1fr; }
+    .steps { grid-template-columns: repeat(2, 1fr); }
+    .modules-grid { grid-template-columns: 1fr; }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#" onclick="window.scrollTo(0,0);return false;">DOODEE</a>
+  <div style="display:flex;gap:24px;align-items:center;">
+    <a class="nav-link" href="#agents">AGENTS</a>
+    <a class="nav-link" href="#studio">VIDEO STUDIO</a>
+    <a class="nav-link" href="#platform">PLATFORM</a>
+    <a class="nav-link" href="#pricing">PRICING</a>
+  </div>
+  <a class="nav-cta" href="mailto:Hsw365media@gmail.com?subject=DOODEE Free All Access">GET ACCESS</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">AI AGENTS · 9 AGENTS · ONE PLATFORM</div>
+    <h1 class="hero-title">
+      <span class="line1">THE WORLD'S</span>
+      <span class="line2">MOST POWERFUL</span>
+      <span class="line3">AI PLATFORM</span>
+    </h1>
+    <p class="hero-sub">
+      <strong>DOODEE</strong> merges <strong>iRun</strong> (the AI content machine) with <strong>ala1</strong> (advanced AI reasoning) into one unstoppable open source platform. Ask anything. Build anything. Create music videos. Generate AI movies. Code entire apps. All from one place.
+    </p>
+    <div class="hero-tags">
+      <span class="tag active-tag" onclick="goTo('agents')">AI AGENTS</span>
+      <span class="tag" onclick="goTo('studio')">MUSIC VIDEO MAKER</span>
+      <span class="tag" onclick="goTo('studio')">AI MOVIE STUDIO</span>
+      <span class="tag" onclick="goTo('platform')">CODE BUILDER</span>
+      <span class="tag" onclick="goTo('platform')">CONTENT MACHINE</span>
+      <span class="tag" onclick="goTo('oss')">OPEN SOURCE</span>
+    </div>
+    <div class="hero-btns">
+      <a class="btn-primary" href="mailto:Hsw365media@gmail.com?subject=DOODEE Free All Access">LAUNCH DOODEE FREE</a>
+      <a class="btn-secondary" href="#studio">SEE VIDEO STUDIO</a>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat">
+    <span class="stat-num">2</span>
+    <span class="stat-label">Platforms Merged</span>
+  </div>
+  <div class="stat">
+    <span class="stat-num">9</span>
+    <span class="stat-label">AI Agents</span>
+  </div>
+  <div class="stat">
+    <span class="stat-num">∞</span>
+    <span class="stat-label">Open Source</span>
+  </div>
+  <div class="stat">
+    <span class="stat-num">$0</span>
+    <span class="stat-label">OSS Tier</span>
+  </div>
+</div>
+
+<!-- AGENTS -->
+<section id="agents">
+  <div class="section-eyebrow">AI AGENTS</div>
+  <h2 class="section-title">9 AGENTS.<br>ONE PLATFORM.</h2>
+  <p class="section-sub">Every DOODEE agent is live, autonomous, and ready to answer any question or build anything you can imagine. No limits. No gatekeeping.</p>
+
+  <div class="agents-grid">
+
+    <div class="agent-card">
+      <div class="agent-num"><span class="dot"></span>AGENT-01 · ALWAYS ONLINE</div>
+      <div class="agent-name">ORACLE</div>
+      <p class="agent-desc">Ask it anything in the world. History, science, law, business, music industry, street knowledge — ORACLE knows it all and speaks real.</p>
+      <div class="agent-tags">
+        <span class="agent-tag">Q&A</span>
+        <span class="agent-tag">RESEARCH</span>
+        <span class="agent-tag">ANALYSIS</span>
+        <span class="agent-tag">REAL-TIME WEB</span>
+      </div>
+    </div>
+
+    <div class="agent-card">
+      <div class="agent-num"><span class="dot"></span>AGENT-02 · ALWAYS ONLINE</div>
+      <div class="agent-name">DIRECTOR</div>
+      <p class="agent-desc">Drop your photo and song. DIRECTOR generates a full cinematic music video — scenes, effects, transitions, color grade — in minutes.</p>
+      <div class="agent-tags">
+        <span class="agent-tag">MUSIC VIDEO</span>
+        <span class="agent-tag">AI MOVIE</span>
+        <span class="agent-tag">LYRIC VIDEO</span>
+        <span class="agent-tag">PROMO</span>
+      </div>
+    </div>
+
+    <div class="agent-card">
+      <div class="agent-num"><span class="dot"></span>AGENT-03 · ALWAYS ONLINE</div>
+      <div class="agent-name">ARCHITECT</div>
+      <p class="agent-desc">Describe any app, website, or tool. ARCHITECT writes the full code, builds it, and hands you the files — no dev team needed.</p>
+      <div class="agent-tags">
+        <span class="agent-tag">FULL-STACK</span>
+        <span class="agent-tag">APIS</span>
+        <span class="agent-tag">AUTOMATION</span>
+      </div>
+    </div>
+
+    <div class="agent-card">
+      <div class="agent-num"><span class="dot"></span>AGENT-04 · ALWAYS ONLINE</div>
+      <div class="agent-name">HYPE ENGINE</div>
+      <p class="agent-desc">iRun's content machine, now turbo-charged. Auto-generate captions, hooks, TikToks, reels, tweets, email blasts, and full campaign strategies.</p>
+      <div class="agent-tags">
+        <span class="agent-tag">TIKTOK</span>
+        <span class="agent-tag">INSTAGRAM</span>
+        <span class="agent-tag">EMAIL</span>
+        <span class="agent-tag">CAMPAIGNS</span>
+      </div>
+    </div>
+
+    <div class="agent-card">
+      <div class="agent-num"><span class="dot"></span>AGENT-05 · ALWAYS ONLINE</div>
+      <div class="agent-name">SOUNDLAB</div>
+      <p class="agent-desc">Write lyrics, generate beats, create song concepts, analyze hits in any genre, and produce A&R-level feedback on your tracks instantly.</p>
+      <div class="agent-tags">
+        <span class="agent-tag">LYRICS</span>
+        <span class="agent-tag">BEAT ANALYSIS</span>
+        <span class="agent-tag">A&R</span>
+        <span class="agent-tag">CONCEPTS</span>
+      </div>
+    </div>
+
+    <div class="agent-card">
+      <div class="agent-num"><span class="dot"></span>AGENT-06 · ALWAYS ONLINE</div>
+      <div class="agent-name">MONEYMAKER</div>
+      <p class="agent-desc">Business strategy, monetization plans, brand deals, indie artist revenue streams, pricing, digital products — built for entrepreneurs who move.</p>
+      <div class="agent-tags">
+        <span class="agent-tag">STRATEGY</span>
+        <span class="agent-tag">MONETIZATION</span>
+        <span class="agent-tag">BRANDING</span>
+        <span class="agent-tag">DEALS</span>
+      </div>
+    </div>
+
+    <div class="agent-card">
+      <div class="agent-num"><span class="dot"></span>AGENT-07 · ALWAYS ONLINE</div>
+      <div class="agent-name">SCRIPTWRITER</div>
+      <p class="agent-desc">Paste a concept — get a full AI movie script, shot list, scene breakdowns, character bios, and dialogue. From idea to production-ready in seconds.</p>
+      <div class="agent-tags">
+        <span class="agent-tag">SCRIPTS</span>
+        <span class="agent-tag">SCREENPLAYS</span>
+        <span class="agent-tag">SHOT LISTS</span>
+        <span class="agent-tag">DIALOGUE</span>
+      </div>
+    </div>
+
+    <div class="agent-card">
+      <div class="agent-num"><span class="dot"></span>AGENT-08 · ALWAYS ONLINE</div>
+      <div class="agent-name">STREETWEAR AI</div>
+      <p class="agent-desc">Design drops, write product descriptions, build lookbooks, plan release calendars, and generate ad copy for indie streetwear brands and fashion entrepreneurs.</p>
+      <div class="agent-tags">
+        <span class="agent-tag">DESIGN BRIEFS</span>
+        <span class="agent-tag">LOOKBOOKS</span>
+        <span class="agent-tag">DROPS</span>
+        <span class="agent-tag">AD COPY</span>
+      </div>
+    </div>
+
+    <div class="agent-card" id="oss">
+      <div class="agent-name">DEV CORE</div>
+      <p class="agent-desc">The open source engine under everything. Fork it, extend it, build your own agents on top of DOODEE. Full API access, plugin system, and community modules.</p>
+      <div class="agent-tags">
+        <span class="agent-tag">OPEN SOURCE</span>
+        <span class="agent-tag">API</span>
+        <span class="agent-tag">PLUGINS</span>
+        <span class="agent-tag">COMMUNITY</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- VIDEO STUDIO -->
+<section id="studio" class="studio-section">
+  <div class="studio-inner">
+    <div>
+      <div class="section-eyebrow">NEW · AGENT-02</div>
+      <h2 class="section-title">AI VIDEO &<br><span style="color:var(--magenta)">MOVIE</span> STUDIO</h2>
+      <p class="section-sub">Drop your photo + song and DOODEE generates a full music video. Paste a script and watch it become a real AI movie. No camera. No crew. Just you.</p>
+
+      <div class="steps">
+        <div class="step">
+          <span class="step-num">01</span>
+          <span class="step-icon">🖼</span>
+          <div class="step-title">ADD YOUR PHOTO</div>
+          <p class="step-desc">Upload any photo. DOODEE's AI animates it and builds cinematic scenes around it.</p>
+        </div>
+        <div class="step">
+          <span class="step-num">02</span>
+          <span class="step-icon">🎵</span>
+          <div class="step-title">DROP YOUR SONG</div>
+          <p class="step-desc">Upload MP3, WAV, or FLAC. Every cut and effect syncs to your beat automatically.</p>
+        </div>
+        <div class="step">
+          <span class="step-num">03</span>
+          <span class="step-icon">⚡</span>
+          <div class="step-title">AI GENERATES</div>
+          <p class="step-desc">Pick your style and vibe. Hit generate. DIRECTOR builds your entire music video.</p>
+        </div>
+        <div class="step">
+          <span class="step-num">04</span>
+          <span class="step-icon">📤</span>
+          <div class="step-title">EXPORT & DROP</div>
+          <p class="step-desc">Download in 4K, 1080p, or 9:16 vertical for TikTok & Reels. Post it. Run it.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="studio-preview">
+      <div class="studio-topbar">
+        <div class="studio-dot" style="background:#ff5f57"></div>
+        <div class="studio-dot" style="background:#ffbd2e"></div>
+        <div class="studio-dot" style="background:#28c840"></div>
+        <span style="font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);margin-left:8px;">DOODEE Studio — Artist_NewDrop.proj</span>
+      </div>
+      <div class="studio-screen">
+        <div class="studio-artist">ARTIST NAME</div>
+        <div class="studio-sub-text">NEW DROP · AI GENERATED MV</div>
+      </div>
+      <div style="height:3px;background:var(--border);position:relative;">
+        <div style="position:absolute;left:0;top:0;bottom:0;width:38%;background:linear-gradient(90deg,var(--cyan),var(--magenta));"></div>
+      </div>
+      <div class="studio-controls">
+        <div class="ctrl-btns">
+          <span>⏮</span>
+          <span class="ctrl-play">▶</span>
+          <span>⏭</span>
+          <span>⛶</span>
+        </div>
+        <span class="ctrl-time">1:24 / 3:42</span>
+        <span style="font-family:'Space Mono',monospace;font-size:9px;color:var(--cyan);border:1px solid var(--cyan);padding:4px 10px;cursor:pointer;">Export ↓</span>
+      </div>
+      <div class="studio-timeline">
+        <span class="tl-block tl-photo">📷 PHOTO</span>
+        <span class="tl-block tl-scene">🎬 SCENE 1</span>
+        <span class="tl-block tl-scene">🎬 SCENE 2</span>
+        <span class="tl-block tl-text">✍ TEXT</span>
+        <span class="tl-block tl-scene">🎬 SCENE 3</span>
+        <span class="tl-block tl-fx">✨ FX</span>
+        <span class="tl-block tl-track">🎵 TRACK — NEW_DROP_FINAL.MP3</span>
+        <span class="tl-block tl-outro">🔚 OUTRO</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MODULES -->
+<section id="platform">
+  <div class="section-eyebrow">PLATFORM MODULES</div>
+  <h2 class="section-title">EVERYTHING<br>IN ONE PLACE</h2>
+  <p class="section-sub">iRun's content machine + ala1's AI reasoning engine = DOODEE. Nine modules. One login. Infinite output.</p>
+
+  <div class="modules-grid">
+    <div class="module-card">
+      <div class="module-num-label">MODULE 01</div>
+      <div class="module-body">
+        <div class="module-eyebrow">MODULE 01</div>
+        <div class="module-name">VIDEO STUDIO</div>
+        <p class="module-desc">Music videos, AI movies, lyric videos & promos — built from your photo, song, or script.</p>
+        <div class="module-tags"><span class="module-tag">MUSIC VIDEO</span><span class="module-tag">AI MOVIE</span><span class="module-tag">4K EXPORT</span></div>
+      </div>
+    </div>
+    <div class="module-card">
+      <div class="module-num-label">MODULE 02</div>
+      <div class="module-body">
+        <div class="module-eyebrow">MODULE 02</div>
+        <div class="module-name">CONTENT MACHINE</div>
+        <p class="module-desc">Auto-generate content for every platform — TikTok hooks, IG captions, YouTube scripts, email campaigns, and more.</p>
+        <div class="module-tags"><span class="module-tag">TIKTOK</span><span class="module-tag">INSTAGRAM</span><span class="module-tag">YOUTUBE</span><span class="module-tag">EMAIL</span></div>
+      </div>
+    </div>
+    <div class="module-card">
+      <div class="module-num-label">MODULE 03</div>
+      <div class="module-body">
+        <div class="module-eyebrow">MODULE 03</div>
+        <div class="module-name">CODE BUILDER</div>
+        <p class="module-desc">Describe any app or tool in plain English. DOODEE writes the full code and ships you the files. No dev needed.</p>
+        <div class="module-tags"><span class="module-tag">WEB APPS</span><span class="module-tag">APIS</span><span class="module-tag">AUTOMATION</span><span class="module-tag">SCRIPTS</span></div>
+      </div>
+    </div>
+    <div class="module-card">
+      <div class="module-num-label">MODULE 04</div>
+      <div class="module-body">
+        <div class="module-eyebrow">MODULE 04</div>
+        <div class="module-name">ASK ANYTHING</div>
+        <p class="module-desc">ORACLE answers any question — research, law, music business, science, strategy, culture. Real answers, no sugar-coating.</p>
+        <div class="module-tags"><span class="module-tag">Q&A</span><span class="module-tag">RESEARCH</span><span class="module-tag">WEB SEARCH</span></div>
+      </div>
+    </div>
+    <div class="module-card">
+      <div class="module-num-label">MODULE 05</div>
+      <div class="module-body">
+        <div class="module-eyebrow">MODULE 05</div>
+        <div class="module-name">MUSIC & A&R</div>
+        <p class="module-desc">Write lyrics, get beat analysis, generate song concepts, plan rollouts, and get A&R-level feedback on your music instantly.</p>
+        <div class="module-tags"><span class="module-tag">LYRICS</span><span class="module-tag">CONCEPTS</span><span class="module-tag">FEEDBACK</span></div>
+      </div>
+    </div>
+    <div class="module-card">
+      <div class="module-num-label">MODULE 06</div>
+      <div class="module-body">
+        <div class="module-eyebrow">MODULE 06</div>
+        <div class="module-name">BIZ & MONEY</div>
+        <p class="module-desc">Monetization strategy, digital product creation, brand deals, indie label operations — built for artists who run their own empire.</p>
+        <div class="module-tags"><span class="module-tag">STRATEGY</span><span class="module-tag">PRODUCTS</span><span class="module-tag">BRANDING</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EMAIL CTA -->
+<section class="email-section">
+  <h2 class="email-title">GET IN FREE.<br><span style="color:var(--magenta)">NO LIMITS.</span></h2>
+  <p class="email-sub">Send your email to unlock full all-access to DOODEE — every agent, every module, the full video studio. No trial. No paywall. Just access.</p>
+  <div class="email-box">
+    <span class="email-label">SEND YOUR EMAIL TO</span>
+    <a class="email-address" href="mailto:Hsw365media@gmail.com?subject=DOODEE Free All Access">Hsw365media@gmail.com</a>
+    <a class="btn-primary" href="mailto:Hsw365media@gmail.com?subject=DOODEE Free All Access" style="margin-top:8px;">✉ EMAIL FOR FREE ACCESS</a>
+    <span class="email-subject">Subject: DOODEE Free All Access · We'll hook you up within 24hrs</span>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing" class="pricing-section">
+  <div class="section-eyebrow">PRICING</div>
+  <h2 class="section-title">GET ON<br>DOODEE</h2>
+  <p class="section-sub">Open source core is always free. Pro and Studio unlock the full agent suite and Video Maker. Access unlocks instantly after checkout.</p>
+
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="price-tier">FREE TRIAL</div>
+      <div class="price-amount">$0</div>
+      <div class="price-period">/ 3 days</div>
+      <ul class="price-features">
+        <li>Full platform access — 3 days</li>
+        <li>All 9 AI agents unlocked</li>
+        <li>Music Video Maker (3 exports)</li>
+        <li>Content Machine (limited)</li>
+        <li>Code Builder (limited)</li>
+        <li>No credit card required</li>
+      </ul>
+      <a class="price-btn" href="mailto:Hsw365media@gmail.com?subject=DOODEE Free All Access">START FREE TRIAL</a>
+    </div>
+
+    <div class="price-card popular">
+      <div class="popular-badge">MOST POPULAR</div>
+      <div class="price-tier">DOODEE PRO</div>
+      <div class="price-amount">$29</div>
+      <div class="price-period">/ month</div>
+      <ul class="price-features">
+        <li>All 9 AI agents — unlimited</li>
+        <li>Music Video Maker — 20/mo</li>
+        <li>AI Movie from script</li>
+        <li>4K video export</li>
+        <li>Full Content Machine</li>
+        <li>Code Builder — unlimited</li>
+        <li>Priority support</li>
+      </ul>
+      <a class="price-btn primary-btn" href="mailto:Hsw365media@gmail.com?subject=DOODEE Pro">GET PRO — BUY NOW</a>
+    </div>
+
+    <div class="price-card">
+      <div class="price-tier">DOODEE STUDIO</div>
+      <div class="price-amount">$97</div>
+      <div class="price-period">one-time</div>
+      <ul class="price-features">
+        <li>Everything in Pro — lifetime</li>
+        <li>Unlimited music videos</li>
+        <li>Unlimited AI movies</li>
+        <li>White-label license</li>
+        <li>API access + plugins</li>
+        <li>Lifetime platform updates</li>
+      </ul>
+      <a class="price-btn" href="mailto:Hsw365media@gmail.com?subject=DOODEE Studio">GET STUDIO — BUY NOW</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <span class="footer-logo">DOODEE</span>
+      <p class="footer-tagline">The world's most powerful open source AI platform. iRun + ala1, merged and unleashed. Built for indie artists, entrepreneurs, and creators.</p>
+    </div>
+    <div>
+      <div class="footer-col-title">PLATFORM</div>
+      <ul class="footer-links">
+        <li><a href="#studio">Video Studio</a></li>
+        <li><a href="#agents">AI Agents</a></li>
+        <li><a href="#platform">Code Builder</a></li>
+        <li><a href="#platform">Content Machine</a></li>
+        <li><a href="#">Open Source</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">COMPANY</div>
+      <ul class="footer-links">
+        <li><a href="#">DOODEE.io</a></li>
+        <li><a href="#">Respect Da Game Podcast</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">LINKS</div>
+      <ul class="footer-links">
+        <li><a href="#">GitHub (Open Source)</a></li>
+        <li><a href="#">Docs</a></li>
+        <li><a href="#">Community</a></li>
+        <li><a href="#">@doodeeai</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2025 DOODEE · All rights reserved</span>
+    <span class="footer-mit">Open Source · MIT License</span>
+  </div>
+</footer>
+
+<script>
+  // Smooth scroll helper used by tabs
+  function goTo(id) {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    // Update active tab
+    document.querySelectorAll('.tag').forEach(t => t.classList.remove('active-tag'));
+    event.currentTarget.classList.add('active-tag');
+  }
+
+  // Highlight active nav link on scroll
+  const sections = ['agents','studio','platform','pricing'];
+  const navLinks = document.querySelectorAll('.nav-link');
+
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && window.scrollY >= el.offsetTop - 120) current = id;
+    });
+    navLinks.forEach(link => {
+      link.style.color = link.getAttribute('href') === '#' + current ? 'var(--cyan)' : '';
+    });
+  });
+
+  // Agent card click — highlight the card
+  document.querySelectorAll('.agent-card').forEach(card => {
+    card.style.cursor = 'pointer';
+    card.addEventListener('click', function() {
+      document.querySelectorAll('.agent-card').forEach(c => c.classList.remove('agent-active'));
+      this.classList.add('agent-active');
+    });
+  });
+
+  // Studio play button toggle
+  const playBtn = document.querySelector('.ctrl-play');
+  if (playBtn) {
+    let playing = false;
+    playBtn.addEventListener('click', () => {
+      playing = !playing;
+      playBtn.textContent = playing ? '⏸' : '▶';
+      playBtn.style.background = playing ? 'var(--cyan)' : 'var(--magenta)';
+    });
+  }
+
+  // Pricing buttons scroll to email if free
+  document.querySelectorAll('.price-btn').forEach(btn => {
+    if (btn.tagName === 'A') return; // already has href
+  });
+</script>
+</body>
+</html>
