@@ -999,6 +999,14 @@
 }
 
 </style>
+<style>
+  /* Owner PIN (owner-login.js): VIP-only markup stays hidden even if the script never loads */
+  html:not(.hsw-owner) [data-hsw-vip] { display: none !important; }
+  html.hsw-owner [data-hsw-paywall] { display: none !important; }
+  .price-btn.vip-on { border-color: #4ade80; color: #4ade80; cursor: default; }
+  .price-btn.vip-on:hover { background: transparent; color: #4ade80; }
+  .vip-note { color: #4ade80; }
+</style>
 </head>
 <body>
 
@@ -1035,7 +1043,8 @@
       <span class="tag" onclick="goTo('studio')">AI MOVIE STUDIO</span>
       <span class="tag" onclick="goTo('platform')">CODE BUILDER</span>
       <span class="tag" onclick="goTo('platform')">CONTENT MACHINE</span>
-      <span class="tag" onclick="goTo('pricing')">SUBSCRIBE</span>
+      <span class="tag" onclick="goTo('pricing')" data-hsw-paywall>SUBSCRIBE</span>
+      <span class="tag" onclick="goTo('pricing')" data-hsw-vip>VIP · OWNER</span>
     </div>
     <div class="hero-btns">
       <a class="btn-primary" href="#pricing">START DOODEE NOW</a>
@@ -1340,13 +1349,16 @@
   <p class="section-sub">
     DOODEE is the all-in-one AI platform for creators, artists, entrepreneurs, and innovators. Access powerful AI tools for content creation, coding, music, business, branding, and automation.
   </p>
+  <p class="section-sub vip-note" data-hsw-vip>VIP · OWNER — signed in with your PIN. Basic, Pro and MVP are all unlocked for you. Unlimited generations. No charge, ever.</p>
 
   <div class="pricing-grid">
 
     <div class="price-card">
       <div class="price-tier">DOODEE BASIC</div>
-      <div class="price-amount">$20</div>
-      <div class="price-period">/ month</div>
+      <div class="price-amount" data-hsw-paywall>$20</div>
+      <div class="price-period" data-hsw-paywall>/ month</div>
+      <div class="price-amount" data-hsw-vip>FREE</div>
+      <div class="price-period vip-note" data-hsw-vip>included with VIP · Owner</div>
 
       <ul class="price-features">
         <li>Core Platform Access</li>
@@ -1357,17 +1369,20 @@
         <li>Email Support</li>
       </ul>
 
-      <a class="price-btn" href="#">
+      <a class="price-btn" href="#" data-hsw-paywall>
         GET BASIC — $20/MONTH
       </a>
+      <span class="price-btn vip-on" data-hsw-vip aria-disabled="true">ACTIVE · VIP OWNER</span>
     </div>
 
     <div class="price-card popular">
       <div class="popular-badge">MOST POPULAR</div>
 
       <div class="price-tier">DOODEE PRO</div>
-      <div class="price-amount">$30</div>
-      <div class="price-period">/ month</div>
+      <div class="price-amount" data-hsw-paywall>$30</div>
+      <div class="price-period" data-hsw-paywall>/ month</div>
+      <div class="price-amount" data-hsw-vip>FREE</div>
+      <div class="price-period vip-note" data-hsw-vip>included with VIP · Owner</div>
 
       <ul class="price-features">
         <li>Everything In Basic</li>
@@ -1378,17 +1393,20 @@
         <li>Priority Support</li>
       </ul>
 
-      <a class="price-btn primary-btn"
+      <a class="price-btn primary-btn" data-hsw-paywall
          href="https://buy.stripe.com/4gM28r2CXbEG6smdc73VC09"
          target="_blank">
          GET PRO — $30/MONTH
       </a>
+      <span class="price-btn vip-on" data-hsw-vip aria-disabled="true">ACTIVE · VIP OWNER</span>
     </div>
 
     <div class="price-card">
       <div class="price-tier">DOODEE MVP</div>
-      <div class="price-amount">$99</div>
-      <div class="price-period">/ month</div>
+      <div class="price-amount" data-hsw-paywall>$99</div>
+      <div class="price-period" data-hsw-paywall>/ month</div>
+      <div class="price-amount" data-hsw-vip>FREE</div>
+      <div class="price-period vip-note" data-hsw-vip>included with VIP · Owner</div>
 
       <ul class="price-features">
         <li>Unlimited Access To All 9 AI Agents</li>
@@ -1402,11 +1420,12 @@
         <li>Future Platform Upgrades Included</li>
       </ul>
 
-      <a class="price-btn"
+      <a class="price-btn" data-hsw-paywall
          href="https://buy.stripe.com/eVq4gzcdxgZ04ke7RN3VC08"
          target="_blank">
          GET MVP — $99/MONTH
       </a>
+      <span class="price-btn vip-on" data-hsw-vip aria-disabled="true">ACTIVE · VIP OWNER</span>
     </div>
 
   </div>
@@ -1504,6 +1523,6 @@
     if (btn.tagName === 'A') return; // already has href
   });
 </script>
-<script src="owner-login.js" defer></script>
+<script src="owner-login.js?v=3" defer></script>
 </body>
 </html>
